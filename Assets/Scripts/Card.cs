@@ -101,9 +101,7 @@ public class Card : MonoBehaviour
             && (inDeckHelper || inPlayCell || inCollCell))
         {
             Vector3 newPosition = Camera.main.ScreenPointToRay(Input.mousePosition).origin + oldCardPosition;
-            transform.position = new Vector3(newPosition.x, newPosition.y, transform.position.z + 10);
-           // suitRenderer.sortingOrder += 1;
-           // valueRenderer.sortingOrder += 1;
+            transform.position = new Vector3(newPosition.x, newPosition.y, transform.position.z);
         }
     }
     #endregion
@@ -369,12 +367,14 @@ public class Card : MonoBehaviour
     {
             Quaternion startRotation = thisTransform.rotation;
             Quaternion endRotation = thisTransform.rotation * Quaternion.Euler(degrees);
-            float rate = 1.0f / time;
-            float t = 0.0f;
-            while (t < 1.0f)
+        float currentTime = 0f;
+        float interpolant = 0f;
+            while (interpolant < 1.0f)
             {
-                t += Time.deltaTime * rate;
-                thisTransform.rotation = Quaternion.Slerp(startRotation, endRotation, t);
+            currentTime += Time.deltaTime;
+            interpolant = currentTime / time;
+            thisTransform.rotation = Quaternion.Slerp(startRotation, endRotation, interpolant);
+            yield return null;
 
         }
         yield return null;
